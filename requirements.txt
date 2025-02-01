@@ -6,4 +6,5 @@ google-generativeai
 langchain
 langchain-google-genai
 faiss-cpu
+langchain-community
 python-dotenv
