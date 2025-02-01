@@ -8,3 +8,4 @@ langchain-google-genai
 faiss-cpu
 langchain-community
 python-dotenv
+langchain-community
