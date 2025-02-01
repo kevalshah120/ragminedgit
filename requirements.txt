@@ -1,0 +1,9 @@
+streamlit
+PyPDF2
+requests
+beautifulsoup4
+google-generativeai
+langchain
+langchain-google-genai
+faiss-cpu
+python-dotenv
