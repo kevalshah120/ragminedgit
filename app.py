@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import google.generativeai as genai
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
@@ -22,24 +22,24 @@ HEADERS = {
 }
 
 def get_gemini_response(stock_name):
-    """Get and store Gemini API response for the stock"""
+    """Get and store Gemini API response for the stock using Gemini 2.5 Pro"""
     try:
-        # Initialize Gemini model
-        model = genai.GenerativeModel('gemini-1.0-pro')
-        
+    # Initialize Gemini 2.5 Pro model
+        model = genai.GenerativeModel('gemini-2.5-pro')
+
         # Prompt for stock analysis
         prompt = f"Provide a detailed analysis of {stock_name} including key metrics, performance, and market position. Format as JSON."
-        
+
         # Get response
         response = model.generate_content(prompt)
-        
+
         # Save response
         os.makedirs("APIData", exist_ok=True)
         filename = f"APIData/{stock_name}_gemini_analysis.json"
-        
+
         with open(filename, 'w') as f:
             json.dump({"analysis": response.text}, f, indent=4)
-            
+
         return response.text
     except Exception as e:
         st.error(f"Error getting Gemini analysis: {e}")
@@ -148,15 +148,15 @@ def get_conversational_chain():
     You are an AI assistant answering questions based on provided documents.
     Use the conversation history for better context.
     If the answer is not available, respond with "answer is not available in the context."
-    
+
     Context:
     {context}
-    
+
     Question: {question}
-    
+
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, google_api_key=GEMINI_API_KEY)
+    model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.3, google_api_key=GEMINI_API_KEY)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     return load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
@@ -165,7 +165,7 @@ def user_query(question):
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(question)
     chain = get_conversational_chain()
-    response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
+    response = chain.invoke({"input_documents": docs, "question": question})
     return response["output_text"]
 
 def main():

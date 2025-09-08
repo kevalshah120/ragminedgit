@@ -2,10 +2,9 @@ streamlit
 PyPDF2
 requests
 beautifulsoup4
-google-generativeai
-langchain
-langchain-google-genai
+google-generativeai>=0.8.0
+langchain>=0.2.0
+langchain-google-genai>=1.0.0
 faiss-cpu
-langchain-community
+langchain-community>=0.0.30
 python-dotenv
-langchain-community
